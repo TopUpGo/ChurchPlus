@@ -364,7 +364,6 @@
                     <th scope="col">Id</th>
                     <th scope="col">Nome</th>
                     <th scope="col">Saldo</th>
-                    <th scope="col"> </th>
                 </tr>
             </thead>
             <tbody>
@@ -376,18 +375,6 @@
                             <th scope="row">@cargo.Id</th>
                             <td>@cargo.Nome</td>
                             <td>@cargo.Saldo</td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a role="button"
-                                       class="btn botao-transparente btn-sm"
-                                       asp-route-id="@cargo.Id"
-                                       asp-controller="Linha"
-                                       asp-action="Editar"
-                                       title="Editar">
-                                        <i class="fa-solid fa-pen-to-square icon-mini"></i>
-                                    </a>
-                                </div>
-                            </td>
                         </tr>
                     }
                 }
@@ -400,19 +387,4 @@
 
     </div>
 
-    <script>
-        $(document).ready(function () {
-            // Ativa o DataTable
-            $('#table-usuarios').DataTable();
-
-            // Evento de duplo clique
-            $('#table-usuarios').on('dblclick', 'tr.linha-usuario', function () {
-                var id = $(this).data('id');
-                if (id) {
-                    // Redireciona para a página de edição
-                    window.location.href = '/Linha/Editar/' + id;
-                }
-            });
-        });
-    </script>
 </div>
