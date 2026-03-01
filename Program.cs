@@ -71,6 +71,21 @@ builder.Services.AddSession(o =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<BancoContext>();
+
+    try
+    {
+        var canConnect = db.Database.CanConnect();
+        Console.WriteLine("CONEXÃO COM BANCO: " + canConnect);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("ERRO DE CONEXÃO: " + ex.Message);
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
