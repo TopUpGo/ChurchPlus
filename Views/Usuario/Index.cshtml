@@ -1,0 +1,167 @@
+﻿@model List<UsuarioModel>
+@{
+    ViewData["Title"] = "Usuários";
+}
+<style>
+    .form-container {
+        width: 100%;
+        margin: 0;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 10px; /* opcional: remove o arredondamento se quiser bordas quadradas */
+        background-color: rgba(248, 249, 250, 0.75);
+        box-sizing: border-box; /* garante que padding não estoure a largura */
+    }
+
+    .form-container2 {
+        width: 100%;
+        margin: 0;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 10px; /* opcional: remove o arredondamento se quiser bordas quadradas */
+        background-color: rgba(248, 249, 250, 0.9);
+        box-sizing: border-box; /* garante que padding não estoure a largura */
+    }
+    /*
+        .custom-border {
+            border-bottom: 2px solid black;
+            padding: 0.25rem;
+        } */
+
+    .form-group-spacing {
+        margin-bottom: 2rem; /* Triplo do padrão (~1.33rem) */
+    }
+
+    #table-usuarios {
+        table-layout: auto !important;
+        width: auto !important;
+    }
+
+        #table-usuarios th,
+        #table-usuarios td {
+            white-space: nowrap; /* impede quebra de linha */
+            font-size: 12px; /* já reduz o tamanho da fonte */
+            padding: 4px 8px; /* opcional: deixa a célula mais compacta */
+        }
+
+    .icon-mini {
+        font-size: 1.05rem; /* ~12px */
+    }
+
+    .botao-transparente {
+        background-color: transparent;
+        border: 1px solid transparent;
+        color: black;
+    }
+
+        .botao-transparente:hover {
+            border-color: black;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<div class="text-center">
+
+    @if(TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+
+    @if (TempData["MensagemErro"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
+            @TempData["MensagemErro"]
+        </div>
+    } 
+</div>
+
+<div class="form-container">
+
+    <div class="text-center mb-4">
+        <h1 class="fs-3 custom-border d-inline-block">Usuários</h1>
+    </div>
+
+    <div class="d-flex justify-content-between mt-5">
+        <a class="btn btn-sm botao-transparente" role="button" asp-controller="Usuario" asp-action="Criar">
+            <i class="fa-solid fa-plus me-1"></i> Criar
+        </a>
+    </div>
+    <br />
+    <div class="form-container">
+        <table class="table" id="table-usuarios">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Login</th>
+                    <th scope="col"> </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (UsuarioModel usuario in Model)
+                    {
+                        <tr>
+                            <th scope="row">@usuario.Id</th>
+                            <td>@usuario.Nome</td>
+                            <td>@usuario.Login</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a role="button"
+                                       class="btn botao-transparente btn-sm"
+                                       asp-route-id="@usuario.Id"
+                                       asp-controller="Usuario"
+                                       asp-action="Editar"
+                                       title="Editar">
+                                        <i class="fa-solid fa-pen-to-square icon-mini"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr class="odd"><td valign="top" colspan="6">Nenhum Usuário encontrado</td></tr>
+                }
+            </tbody>
+        </table>
+
+        <div id="modalContactosUsuario" class="modal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Lista de contactos</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="listaContactoUsuario"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <script>
+        $(document).ready(function () {
+            // Ativa o DataTable
+            $('#table-usuarios').DataTable();
+
+            // Evento de duplo clique
+            $('#table-usuarios').on('dblclick', 'tr.linha-usuario', function () {
+                var id = $(this).data('id');
+                if (id) {
+                    // Redireciona para a página de edição
+                    window.location.href = '/Usuario/Editar/' + id;
+                }
+            });
+        });
+    </script>
+</div>

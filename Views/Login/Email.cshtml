@@ -1,0 +1,33 @@
+﻿@model EmailModel
+@{
+    ViewBag.Title = "Enviar Email";
+}
+
+<h2>Enviar Email</h2>
+
+<form asp-action="Index" method="post">
+    <div class="form-group">
+        <label>Para</label>
+        <input asp-for="Para" class="form-control" />
+        <span asp-validation-for="Para" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Assunto</label>
+        <input asp-for="Assunto" class="form-control" />
+        <span asp-validation-for="Assunto" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Mensagem</label>
+        <textarea asp-for="Mensagem" class="form-control"></textarea>
+        <span asp-validation-for="Mensagem" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enviar</button>
+</form>
+
+@if (ViewBag.Mensagem != null)
+{
+    <p>@ViewBag.Mensagem</p>
+}

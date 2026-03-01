@@ -1,0 +1,158 @@
+﻿@using Analise.Enuns
+@model UsuarioModel
+
+@{
+    ViewData["Title"] = "Editar usuário";
+}
+<style>
+    .form-container {
+        width: 100%;
+        margin: 0;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 10px; /* opcional: remove o arredondamento se quiser bordas quadradas */
+        background-color: rgba(248, 249, 250, 0.75);
+        box-sizing: border-box; /* garante que padding não estoure a largura */
+    }
+    
+            .custom-border {
+                border-bottom: 2px solid black;
+                padding: 0.25rem;
+            }
+
+    .form-group-spacing {
+        margin-bottom: 2rem; /* Triplo do padrão (~1.33rem) */
+    }
+</style>
+
+
+
+<div class="form-container">
+
+    <div class="text-center mb-4">
+        <h1 class="fs-3 custom-border d-inline-block">Editar dados do usuário</h1>
+    </div>
+    <form asp-controller="Usuario" asp-action="Editar" method="post" class="form-horizontal">
+    <input type="hidden" asp-for="Id"/>
+
+        <div class="row form-group-spacing">
+            <label class="col-12 col-sm-4 col-form-label text-sm-end">Nome do colaborador</label>
+            <div class="col-12 col-sm-6">
+                <input type="text" asp-for="Nome" class="form-control" placeholder="Digite o nome" />
+                @Html.ValidationMessageFor(x => x.Nome)
+            </div>
+        </div>
+
+        <div class="row form-group-spacing">
+            <label class="col-12 col-sm-4 col-form-label text-sm-end">Login</label>
+            <div class="col-12 col-sm-6">
+                <input type="text" asp-for="Login" class="form-control" placeholder="Digite o login" />
+                @Html.ValidationMessageFor(x => x.Login)
+            </div>
+        </div>
+
+        <div class="row form-group-spacing">
+            <label class="col-12 col-sm-4 col-form-label text-sm-end">E-mail do colaborador</label>
+            <div class="col-12 col-sm-6">
+                <input type="text" asp-for="Email" class="form-control" placeholder="Digite o e-mail" />
+                @Html.ValidationMessageFor(x => x.Email)
+            </div>
+        </div>
+
+        <div class="row form-group-spacing">
+            <label class="col-12 col-sm-4 col-form-label text-sm-end">Perfil</label>
+            <div class="col-12 col-sm-6">
+                <select asp-for="Perfil" class="form-control">
+                    <option value="">Selecione</option>
+                    <option value="@PerfilEnum.Admin">Administrador</option>
+                    <option value="@PerfilEnum.Padrao">Padrão</option>
+                </select>
+                @Html.ValidationMessageFor(x => x.Perfil)
+            </div>
+        </div>
+        <div class="row form-group-spacing">
+            <label class="col-12 col-sm-4 col-form-label text-sm-end">Agência</label>
+            <div class="col-12 col-sm-6">
+                <input type="text"
+                       class="form-control"
+                       value="@Model.ListaAgencias.FirstOrDefault(a => a.Value == Model.AgenciaId.ToString())?.Text"
+                       readonly />
+
+                <!-- Hidden para enviar o ID no POST -->
+                @* <input type="hidden" asp-for="AgenciaId" /> *@
+            </div>
+        </div>
+        <div class="row form-group-spacing">
+            <label class="col-12 col-sm-4 col-form-label text-sm-end">Cargo</label>
+            <div class="col-12 col-sm-6">
+                <select asp-for="CargoId" asp-items="Model.ListaCargos" class="form-control">
+                    <option value="">Selecione</option>
+                </select>
+                @Html.ValidationMessageFor(x => x.CargoId)
+            </div>
+        </div>
+        <div class="row form-group-spacing" style="display: none;">
+            <label class="col-12 col-sm-4 col-form-label text-sm-end">Senha</label>
+            <div class="col-12 col-sm-6">
+                <input type="password" asp-for="Senha" class="form-control" value="1" />
+                @Html.ValidationMessageFor(x => x.Senha)
+            </div>
+        </div>
+
+        <div class="form-container">
+            <div class="d-flex justify-content-between mt-5">
+                <label class="section-header w-100">Permissões</label>
+            </div>
+            <div class="row form-group-spacing">
+                <label class="col-12 col-sm-4 col-form-label text-sm-end">Criar</label>
+                <div class="col-sm-6">
+                    <select asp-for="Criar" class="form-control">
+                        <option value="">Selecione</option>
+                        <option>Sim</option>
+                        <option>Não</option>
+                    </select>
+                    @Html.ValidationMessageFor(x => x.Criar)
+                </div>
+            </div>
+            <div class="row form-group-spacing">
+                <label class="col-12 col-sm-4 col-form-label text-sm-end">Editar</label>
+                <div class="col-sm-6">
+                    <select asp-for="Editar" class="form-control">
+                        <option value="">Selecione</option>
+                        <option>Sim</option>
+                        <option>Não</option>
+                    </select>
+                    @Html.ValidationMessageFor(x => x.Editar)
+                </div>
+            </div>
+            <div class="row form-group-spacing">
+                <label class="col-12 col-sm-4 col-form-label text-sm-end">Visualizar</label>
+                <div class="col-sm-6">
+                    <select asp-for="Visualizar" class="form-control">
+                        <option value="">Selecione</option>
+                        <option>Sim</option>
+                        <option>Não</option>
+                    </select>
+                    @Html.ValidationMessageFor(x => x.Visualizar)
+                </div>
+            </div>
+            
+            <div class="row form-group-spacing">
+                <label class="col-12 col-sm-4 col-form-label text-sm-end">Administrar</label>
+                <div class="col-sm-6">
+                    <select asp-for="Administrar" class="form-control">
+                        <option value="">Selecione</option>
+                        <option>Sim</option>
+                        <option>Não</option>
+                    </select>
+                    @Html.ValidationMessageFor(x => x.Administrar)
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-5">
+            <a class="btn btn-outline-dark" asp-controller="Usuario" asp-action="Index" role="button">Usuários</a>
+            <button type="submit" class="btn btn-dark">Salvar</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,531 @@
+﻿<!DOCTYPE html>
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - NHC</title>
+
+        <link href="~/Content/Site.css" rel="stylesheet" />
+        <link rel="manifest" href="~/manifest.json" />
+        <meta name="theme-color" content="#0d6efd" />
+        <link rel="stylesheet" href="~/css/site.css" />
+
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/Analise.styles.css" asp-append-version="true" />
+        <link href="https://cdn.datatables.net/v/dt/dt-2.2.1/datatables.min.css" rel="stylesheet">
+
+        @RenderSection("Styles", required: false)
+    </head>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('Service Worker registrado:', reg))
+                    .catch(err => console.log('Erro no Service Worker:', err));
+            });
+        }
+    </script>
+    <body>
+        <div id="global-loader" style="display:none;">
+            <div class="loader-backdrop"></div>
+            <div class="loader-box">
+                <div class="spinner"></div>
+                <div class="loader-text">A processar...</div>
+            </div>
+        </div>
+
+        <header class="site-header">
+            <nav class="nav">
+                @await Component.InvokeAsync("Menu")
+            </nav>
+        </header>
+
+        <div class="page-container">
+            <section class="page-body">
+                @RenderBody()
+            </section>
+
+            <footer class="footer">
+                &copy; 2025 - TopUp Go
+            </footer>
+        </div>
+
+       @*  <div class="page-body">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+        <footer class="border-top site-footer text-muted">
+            &copy; 2025 - Stely Business
+        </footer> *@
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.datatables.net/v/dt/dt-2.2.1/datatables.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        function mostrarLoader() {
+            document.getElementById("global-loader").style.display = "block";
+        }
+
+        function esconderLoader() {
+            document.getElementById("global-loader").style.display = "none";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // Loader ao submeter formulários
+            document.querySelectorAll("form").forEach(function (form) {
+                form.addEventListener("submit", function () {
+                    mostrarLoader();
+                });
+            });
+
+            // Loader ao clicar links
+            document.querySelectorAll("a").forEach(function (link) {
+                link.addEventListener("click", function () {
+
+                    if (link.classList.contains("submenu-toggle"))
+                        return;
+
+                    const href = link.getAttribute("href");
+                    if (!href || href.startsWith("javascript"))
+                        return;
+
+                    mostrarLoader();
+
+                    // 👇 Se abrir nova aba (PDF)
+                    if (link.getAttribute("target") === "_blank") {
+                        setTimeout(esconderLoader, 2000);
+                    }
+                });
+            });
+
+            // 👇 Quando voltar para a página
+            window.addEventListener("focus", function () {
+                esconderLoader();
+            });
+
+        });
+    </script>
+
+    </body>
+</html>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p6gH2IHzxxGzj2vDghXb6A0rR6B5H0KKU+IDkCVS1HOk4/4T7fpOM7V0x6B1yK1pYoT5xVZ4QF5wFz0oh7ktxw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+   /* Botão estilo nav-link */
+    .btn-nav {
+        padding: 6px 14px;
+        border-radius: 10px;
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        font-weight: 600;
+        border: 1px solid rgba(70,200,120,0.03);
+        backdrop-filter: blur(6px);
+        background: rgba(133,146,141);
+        color: rgba(0,0,0);
+        cursor: pointer;
+        transition: background 0.3s ease, color 0.3s ease;
+    }
+
+        .btn-nav:hover {
+            background: rgba(255,255,255);
+            border: 1px solid rgba(133,146,141);
+            color: rgba(0,0,0);
+        }
+
+.form-container {
+    width: 100%;
+    margin: 0;
+    padding: 0.5rem;
+    border: 0px solid #ccc;
+    border-radius: 10px;
+    background-color: rgba(248, 249, 250, 0);
+    box-sizing: border-box;
+}
+
+    .form-group-spacing {
+        margin-bottom: 2rem;
+    }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        /* ============================
+           BODY E FUNDO
+        ============================ */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: rgba(0,0,0);
+            background: rgba(255,255,255);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding-bottom: 50px;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: rgba(255,255,255);
+            mix-blend-mode: overlay;
+            filter: blur(6px);
+            z-index: 0;
+        }
+
+    /* ============================
+       CONTEÚDO PRINCIPAL
+    ============================ */
+    .page-container {
+        display: flex;
+        flex-direction: column;
+        flex: 1; /* ocupa o espaço total disponível */
+        position: relative;
+        z-index: 1;
+        padding-bottom: 50px;
+    }
+
+    .page-body {
+        flex: 1; /* empurra o rodapé para o fim */
+        padding: 50px;
+    }
+
+    /* ============================
+       RODAPÉ
+    ============================ */
+    /* footer.footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            background: rgba(0,0,0,0);
+            color: #fff;
+        } */
+
+    footer.footer {
+        text-align: center;
+        padding: 1px;
+        background: transparent;
+        color: rgba(0,0,0);
+        margin-top: auto;
+    }
+
+/* layout do header */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(26, 60, 46, 0);
+    backdrop-filter: blur(6px); 
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);        
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    padding: 4px 6px;
+}
+
+/* logotipo + nome */
+.brand {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+}
+    /* Wrapper para menu + botão no lado direito */
+    .menu-wrapper {
+        margin-left: auto; /* empurra tudo para a direita */
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+/* links (lado direito) */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+}
+
+        .nav-links a {
+            color: rgba(0,0,0,0.9); /* cor do texto */
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: transparent; /* fundo transparente */
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+            /* efeito hover leve sem fundo sólido */
+            .nav-links a:hover {
+                background: rgba(255,255,255,0.05); /* leve efeito sobre o fundo */
+                color: black; /* mantém o texto legível */
+            }
+
+/* botão hamburguer */
+.menu-toggle {
+    display: none;
+    margin-left: auto; /* 🔹 empurra o botão para o canto direito */
+    font-size: 26px;
+        background: transparent; /* fundo transparente */
+    border: none;
+        color: black;
+    cursor: pointer;
+}
+.menu-wrapper {
+    margin-left: auto;   /* empurra botão + menu para a direita */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+/* responsividade */
+@@media (max-width: 800px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0;
+            background: rgba(0,0,0,0.75); /* fundo transparente */
+        flex-direction: column;
+        width: 200px;
+        padding: 18px;
+        gap: 10px;
+        border-radius: 0 0 8px 8px;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+}
+
+/* HERO */
+    .hero {
+        min-height: 72vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+        padding: 60px 40px;
+    }
+
+    .hero-inner {
+        max-width: 1100px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 32px;
+        position: relative;
+        z-index: 3;
+    }
+
+    .hero h1 {
+        font-size: 48px;
+        line-height: 1.02;
+        margin-bottom: 12px;
+        color: rgba(0,0,0,0.45);
+        text-shadow: 0 6px 22px rgba(2,10,6,0.5);
+    }
+
+    .hero .accent {
+        color: #48c878;
+    }
+
+    .lead {
+        color: rgba(25,25,25,0.8);
+        margin-bottom: 18px
+    }
+
+    .hero-cta {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 22px
+    }
+
+    @@media (max-width:900px) {
+        .hero h1 {
+            font-size: 32px
+        }
+
+        .nav-links {
+            display: none
+        }
+
+        .hero {
+            padding: 30px
+        }
+
+        .cards {
+            flex-direction: column
+        }
+    }
+
+    .hero-inner::after {
+        content: "";
+        position: absolute;
+        right: -40px;
+        top: 40px;
+        width: 420px;
+        height: 420px;
+        border-radius: 50%;
+        border: 3px solid rgba(255,255,255,0.03);
+        box-shadow: 0 30px 90px rgba(0,0,0,0.45), inset 0 0 40px rgba(80,200,120,0.03);
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    /* cards */
+    .cards {
+        display: flex;
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+    .card {
+        min-width: 200px;
+        padding: 14px;
+        border-radius: 12px;
+        background: linear-gradient(180deg, rgba(2,10,6,0.2), rgba(2,10,6,1));
+        box-shadow: 0 8px 24px rgba(2,10,6,0.45);
+        backdrop-filter: blur(6px);
+        color: #dff7e8;
+    }
+    /* link verde */
+    .link-green {
+        color: #48c878;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: color 0.3s ease;
+    }
+
+    .btn {
+        padding: 10px 18px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-block;
+        border: 1px solid rgba(255,255,255,0.06);
+        backdrop-filter: blur(6px);
+    }
+
+        .btn.primary {
+            background: linear-gradient(90deg, rgba(70,200,120), rgba(50,160,90));
+            color: #eaffef;
+        }
+
+        .btn.ghost {
+            background: transparent;
+            color: rgba(0,0,0);
+            border: 1px solid rgba(133,146,141);
+        }
+
+/* textbox */
+    .textbox {
+        padding: 6px 14px;
+        border-radius: 10px;
+        font-weight: 400;
+        border: 1px solid rgba(133,146,141);
+        backdrop-filter: blur(6px);
+        background: transparent;
+        color: rgba(0,0,0);
+        font-family: inherit;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+    }
+
+        /* placeholder */
+        .textbox::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        /* foco */
+        .textbox:focus {
+            outline: none;
+            border: 1px solid #48c878;
+            box-shadow: 0 0 12px rgba(72,200,120,0.3);
+        }
+
+    /* autocomplete transparente Chrome/Safari */
+    input.textbox:-webkit-autofill,
+    input.textbox:-webkit-autofill:hover,
+    input.textbox:-webkit-autofill:focus,
+    input.textbox:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+        -webkit-text-fill-color: rgba(0,0,0) !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    /* autocomplete transparente Firefox */
+    input.textbox:-moz-autofill {
+        box-shadow: 0 0 0px 1000px transparent inset !important;
+        -moz-text-fill-color: rgba(0,0,0) !important;
+    }
+
+.textbox.primary {
+    background: linear-gradient(90deg, rgba(70,200,120,0.18), rgba(50,160,90,0.14));
+    color: #fff;
+}
+
+.textbox.ghost {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(230,243,234,0.08);
+}
+
+.textbox:focus {
+    outline: none;
+    border: 1px solid #48c878;
+    box-shadow: 0 0 12px rgba(72,200,120,0.3);
+}
+
+/* link verde */
+.link-green {
+    color: #48c878;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.link-green:hover {
+    color: #32a060;
+}
+
+</style>

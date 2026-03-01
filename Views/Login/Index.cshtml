@@ -1,0 +1,356 @@
+﻿@model LoginModel
+@{
+	Layout = "_Layout_Deslogado";
+	ViewData["Title"] = "Login";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p6gH2IHzxxGzj2vDghXb6A0rR6B5H0KKU+IDkCVS1HOk4/4T7fpOM7V0x6B1yK1pYoT5xVZ4QF5wFz0oh7ktxw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+    /* reset simples */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        /* BOTÃO NAV */
+        .btn-nav {
+            padding: 6px 14px;
+            border-radius: 10px;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            border: 1px solid rgba(70,200,120,0.03);
+            backdrop-filter: blur(6px);
+            background: rgba(133,146,141);
+            color: rgba(0,0,0);
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-nav:hover {
+            background: rgba(255,255,255);
+            border: 1px solid rgba(133,146,141);
+            color: rgba(0,0,0);
+        }
+
+        /* Formulário */
+        .form-container {
+            width: 100%;
+            margin: 0;
+            padding: 0.5rem;
+            border-radius: 10px;
+            background-color: transparent;
+            box-sizing: border-box;
+        }
+
+        .form-group-spacing {
+            margin-bottom: 2rem;
+        }        
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.06);
+            backdrop-filter: blur(6px);
+        }
+
+        .btn.primary {
+            background: linear-gradient(90deg, rgba(70,200,120), rgba(50,160,90));
+            color: #eaffef;
+        }
+
+        .btn.ghost {
+            background: transparent;
+            color: rgba(0,0,0);
+            border: 1px solid rgba(133,146,141);
+        }
+
+        /* textbox */
+        .textbox {
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-weight: 400;
+            border: 1px solid rgba(133,146,141);
+            backdrop-filter: blur(6px);
+            background: transparent;
+            color: rgba(0,0,0);
+            font-family: inherit;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        /* placeholder */
+        .textbox::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        /* foco */
+        .textbox:focus {
+            outline: none;
+            border: 1px solid #48c878;
+            box-shadow: 0 0 12px rgba(72,200,120,0.3);
+        }
+
+        /* autocomplete transparente Chrome/Safari */
+        input.textbox:-webkit-autofill,
+        input.textbox:-webkit-autofill:hover,
+        input.textbox:-webkit-autofill:focus,
+        input.textbox:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+            -webkit-text-fill-color: rgba(0,0,0) !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        /* autocomplete transparente Firefox */
+        input.textbox:-moz-autofill {
+            box-shadow: 0 0 0px 1000px transparent inset !important;
+            -moz-text-fill-color: rgba(0,0,0) !important;
+        }
+
+    .hero {
+        min-height: 72vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+        padding: 60px 40px;
+    }
+
+    .hero-inner {
+        max-width: 1100px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 32px;
+        position: relative;
+        z-index: 3;
+    }
+
+    .hero h1 {
+        font-size: 48px;
+        line-height: 1.02;
+        margin-bottom: 12px;
+        color: rgba(0,0,0,0.45);
+        text-shadow: 0 6px 22px rgba(2,10,6,0.5);
+    }
+
+    .hero .accent {
+        color: #48c878;
+    }
+
+    .lead {
+        color: rgba(25,25,25,0.8);
+        margin-bottom: 18px
+    }
+
+    .hero-cta {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 22px
+    }
+
+    @@media (max-width:900px) {
+        .hero h1 {
+            font-size: 32px
+        }
+
+        .nav-links {
+            display: none
+        }
+
+        .hero {
+            padding: 30px
+        }
+
+        .cards {
+            flex-direction: column
+        }
+    }
+
+    .hero-inner::after {
+        content: "";
+        position: absolute;
+        right: -40px;
+        top: 40px;
+        width: 420px;
+        height: 420px;
+        border-radius: 50%;
+        border: 3px solid rgba(255,255,255,0.03);
+        box-shadow: 0 30px 90px rgba(0,0,0,0.45), inset 0 0 40px rgba(80,200,120,0.03);
+        z-index: 1;
+        pointer-events: none;
+    }
+        
+    /* cards */
+    .cards {
+        display: flex;
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+    .card {
+        min-width: 200px;
+        padding: 14px;
+        border-radius: 12px;
+        background: linear-gradient(180deg, rgba(2,10,6,0.2), rgba(2,10,6,1));
+        box-shadow: 0 8px 24px rgba(2,10,6,0.45);
+        backdrop-filter: blur(6px);
+        color: #dff7e8;
+    }
+    /* link verde */
+    .link-green {
+        color: #48c878;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: color 0.3s ease;
+    }
+
+        .link-green:hover {
+            color: rgba(2,10,6,1);
+        }
+
+    .form-check-input {
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: white;
+        border: 2px solid black;
+        width: 18px;
+        height: 18px;
+        border-radius: 3px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
+    }
+
+        /* Quando o checkbox estiver marcado */
+        .form-check-input:checked {
+            background-color: black;
+            border-color: black;
+        }
+
+            /* Adiciona o símbolo de check (✓) dentro */
+            .form-check-input:checked::after {
+                content: '✓';
+                color: white;
+                font-size: 13px;
+                position: absolute;
+                top: 0;
+                left: 3px;
+            }
+
+    label {
+        color: #000; /* preto */
+    }
+
+</style>
+
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
+        @TempData["MensagemErro"]
+    </div>
+}
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        <button type="button" class="btn btn-danger btn-sm close-alert" arial-label="Close">X</button>
+        @TempData["MensagemSucesso"]
+    </div>
+}
+
+<div class="row">
+    <!-- Coluna esquerda 60% -->
+    <div class="col-12 col-md-7">
+        <main class="hero">
+            <div class="hero-inner">
+                <h1>Igreja <span class="accent">Crentes</span> da Bíblia em Moçambique</h1>
+                <p class="lead">
+                    Portal de gestão de finanças e patrimônio.
+                </p>
+                <div class="hero-cta">
+                   @*  <a class="btn primary" href="#">Explore agora</a> *@
+                    <a class="btn ghost" href="#">Saiba mais</a>
+                </div>
+
+                <div class="cards">
+                    @* <div class="card">Comece agora mesmo</div> *@
+                    <div class="card">TopUp Go Website</div>
+                </div>
+                <h1> <span class="accent">Church+</span> </h1>
+            </div>
+        </main>
+    </div>
+
+    <!-- Coluna direita 40% -->
+    <div class="col-12 col-md-5 d-flex align-items-center">
+        <div class="w-100">
+            <div class="text-center mb-4">
+                <h1 style="color: black;" class="fs-3 custom-border d-inline-block">Acesso</h1>
+            </div>
+            <form asp-controller="Login" asp-action="Entrar" method="post" class="form-horizontal">
+                <div class="row form-group-spacing">
+                    <label class="col-12 col-sm-3 col-form-label text-sm-end">Usuário</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="text" asp-for="Login" class="textbox" id="Login" placeholder="Digite o usuário" />
+                        @Html.ValidationMessageFor(x => x.Login)
+                    </div>
+                </div>
+
+                <div class="row form-group-spacing">
+                    <label for="Senha" class="col-12 col-sm-3 col-form-label text-sm-end">Senha</label>
+                    <div class="col-12 col-sm-6">
+                        <input type="password" asp-for="Senha" class="textbox" id="Senha" placeholder="Digite a senha" />
+                        @Html.ValidationMessageFor(x => x.Senha)
+
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" value="" id="MostrarSenha">
+                            <label class="form-check-label" for="MostrarSenha">
+                                Mostrar senha
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <div class="row form-group-spacing">
+                    <label class="col-12 col-sm-3 col-form-label text-sm-end"></label>
+                    <div class="col-12 col-sm-6 text-center" style="color: black;">
+                        Esqueceu sua senha?
+                        <a asp-action="RedefinirSenha" asp-controller="Login" class="link-green">Clique aqui</a>
+                    </div>
+                </div>
+                <div class="row form-group-spacing">
+                    <label class="col-12 col-sm-3 col-form-label text-sm-end"></label>
+                    <div class="col-12 col-sm-6">
+                        <button type="submit" class="btn-nav w-100">Entrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#MostrarSenha").change(function () {
+            var senhaInput = $("#Senha");
+            if ($(this).is(":checked")) {
+                senhaInput.attr("type", "text");
+            } else {
+                senhaInput.attr("type", "password");
+            }
+        });
+    });
+</script>
