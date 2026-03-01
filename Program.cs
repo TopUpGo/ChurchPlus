@@ -85,6 +85,8 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine("ERRO DE CONEXÃO: " + ex.Message);
     }
 }
+var test = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine("CONNECTION STRING RECEBIDA: " + test);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
