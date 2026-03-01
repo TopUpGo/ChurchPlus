@@ -9,19 +9,25 @@ using Analise.Helper;
 using Microsoft.Extensions.ObjectPool;
 
 var builder = WebApplication.CreateBuilder(args);
+
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-// Registrar SMTP Settings
+
+// CONFIGURAR PORTA PARA RAILWAY
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://*:{port}");
+
+// SMTP
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SMTP"));
 
-// Registrar serviço de email
+// Serviços
 builder.Services.AddTransient<EmailService>();
 builder.Services.AddTransient<TicketRepositorio>();
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
-//builder.Services.AddEntityFrameworkSqlServer().AddDbContext<BancoContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("DataBase")));
-builder.WebHost.UseUrls("http://*:5285");
-builder.Services.AddDbContext<BancoContext>(options =>options.UseNpgsql(builder.Configuration.GetConnectionString("DataBase")));
+
+// POSTGRESQL (IMPORTANTE)
+builder.Services.AddDbContext<BancoContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
