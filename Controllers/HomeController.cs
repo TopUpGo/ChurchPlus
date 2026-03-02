@@ -201,8 +201,8 @@ namespace Analise.Controllers
             ViewBag.TotalEntradaConstrucaoHoje = valorConstrucaoHoje.ToString("#,0.00").Replace(",", ".");
 
             // SEMANA
-            DateTime fimSemana = DateTime.Today;          // hoje (exclusivo)
-            DateTime inicioSemana = fimSemana.AddDays(-7);      // 7 dias antes
+            DateTime inicioSemana = DateTime.Today.AddDays(-7);
+            DateTime fimSemana = DateTime.Today.AddDays(1); // amanhã 00:00
             decimal valorConstrucaoSemana = _context.Entradas.Where(c => c.LinhaId == 2 && c.DataCadastro >= inicioSemana && c.DataCadastro < fimSemana).Sum(c => (decimal?)c.Valor) ?? 0;
             ViewBag.TotalEntradaConstrucaoSemana = valorConstrucaoSemana.ToString("#,0.00").Replace(",", ".");
 
